@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
+
+	"emaildomainstats"
 )
 
 func main() {
-	stats, err := GetEmailDomainStats("./customer_data.csv")
+	stats, err := emaildomainstats.GetEmailDomainStats("customer_data.csv")
 	if err != nil {
 		log.Fatal(err)
 	}

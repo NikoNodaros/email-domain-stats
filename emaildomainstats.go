@@ -1,4 +1,4 @@
-package main
+package emaildomainstats
 
 import (
 	"encoding/csv"
