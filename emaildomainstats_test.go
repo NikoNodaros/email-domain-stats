@@ -1,8 +1,8 @@
-package emaildomainstats_test
+package main_test
 
 import (
 	"bytes"
-	"emaildomainstats"
+	"main"
 	"os"
 	"reflect"
 	"testing"
@@ -20,13 +20,13 @@ func TestGetDomainStatsFromFile(t *testing.T) {
 	defer file.Close()
 
 	// Call the GetDomainStatsFromFile function with the CSV file
-	stats, err := emaildomainstats.GetDomainStatsFromFile(file)
+	stats, err := main.GetDomainStatsFromFile(file)
 	if err != nil {
 		t.Errorf("GetDomainStatsFromFile failed with error: %v", err)
 	}
 
 	// Define the expected output for the sample CSV file
-	expectedStats := []emaildomainstats.DomainStats{
+	expectedStats := []main.DomainStats{
 		{Domain: "example.com", Count: 3},
 		{Domain: "example.net", Count: 2},
 		{Domain: "example.org", Count: 2},
@@ -43,13 +43,13 @@ func TestValidInput(t *testing.T) {
 	testCases := []struct {
 		name          string
 		input         string
-		expectedStats []emaildomainstats.DomainStats
+		expectedStats []main.DomainStats
 		expectedError error
 	}{
 		{
 			name:          "Empty file",
 			input:         "",
-			expectedStats: []emaildomainstats.DomainStats{},
+			expectedStats: []main.DomainStats{},
 			expectedError: nil,
 		},
 		{
@@ -64,7 +64,7 @@ func TestValidInput(t *testing.T) {
 				"Jack,Anderson,jack.anderson@example.com,Male,\n" +
 				"Kate,Williams,kate.williams@example.co.uk,Female,\n",
 			expectedStats: nil,
-			expectedError: emaildomainstats.ErrInvalidCSVFormat,
+			expectedError: main.ErrInvalidCSVFormat,
 		},
 		{
 			name: "Valid CSV file",
@@ -76,7 +76,7 @@ func TestValidInput(t *testing.T) {
 				"Jacob,Jones,jacob.jones@example.net,Male,127.0.0.5\n" +
 				"Julie,White,julie.white@example.net,Female,127.0.0.6\n" +
 				"Jack,Anderson,jack.anderson@example.com,Male,127.0.0.7\n",
-			expectedStats: []emaildomainstats.DomainStats{
+			expectedStats: []main.DomainStats{
 				{Domain: "example.com", Count: 2},
 				{Domain: "example.net", Count: 2},
 				{Domain: "example.org", Count: 2},
@@ -98,7 +98,7 @@ func TestValidInput(t *testing.T) {
 				"Jane,Williams,jane.williams@example.com,Female,127.0.0.10\n" +
 				"James,Johnson,james.johnson@example.org,Male,127.0.0.11\n" +
 				"Jessica,Brown,jessica.brown@example.org,Female,127.0.0.12\n",
-			expectedStats: []emaildomainstats.DomainStats{
+			expectedStats: []main.DomainStats{
 				{Domain: "example.com", Count: 2},
 				{Domain: "example.net", Count: 3},
 				{Domain: "example.org", Count: 2},
@@ -108,14 +108,14 @@ func TestValidInput(t *testing.T) {
 		{
 			name:          "CSV file with only header",
 			input:         "first_name,last_name,email,gender,ip_address\n",
-			expectedStats: []emaildomainstats.DomainStats{},
+			expectedStats: []main.DomainStats{},
 			expectedError: nil,
 		},
 		{
 			name: "CSV file with only one row",
 			input: "first_name,last_name,email,gender,ip_address\n" +
 				"John,Doe,john.doe@example.com,Male,127.0.0.1\n",
-			expectedStats: []emaildomainstats.DomainStats{
+			expectedStats: []main.DomainStats{
 				{Domain: "example.com", Count: 1},
 			},
 			expectedError: nil,
@@ -129,7 +129,7 @@ func TestValidInput(t *testing.T) {
 			buffer := bytes.NewBufferString(testCase.input)
 
 			// Call the GetDomainStatsFromFile function with the byte buffer
-			stats, err := emaildomainstats.GetDomainStatsFromFile(buffer)
+			stats, err := main.GetDomainStatsFromFile(buffer)
 
 			// Compare the expected output with the actual output
 			if !reflect.DeepEqual(stats, testCase.expectedStats) {
