@@ -38,7 +38,7 @@ func TestGetDomainStatsFromFile(t *testing.T) {
 	}
 }
 
-func TestGetDomainStatsFromFile(t *testing.T) {
+func TestValidInput(t *testing.T) {
 	// Define test cases for different input scenarios and edge cases
 	testCases := []struct {
 		name          string
